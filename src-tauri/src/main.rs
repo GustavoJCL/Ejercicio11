@@ -65,8 +65,8 @@ fn ejercicio_11(
                 .map(|(_, table_data)| table_data.total_length)
                 .collect();
 
-            let process_mean = mean(&collect_total_length).unwrap();
-            let process_std_dev = std_deviation(&collect_total_length).unwrap();
+            let process_mean = mean(&collect_total_length);
+            let process_std_dev = std_deviation(&collect_total_length);
             let coeficient_capacity = spec_range / (6.0 * process_std_dev);
             let coeficient_capacity_k =
                 coeficient_capacity * (1.0 - (process_mean - ei).abs() / (0.5 * spec_range));
@@ -100,18 +100,18 @@ fn ejercicio_11(
     return_data
 }
 
-fn mean(data: &[f64]) -> Option<f64> {
+fn mean(data: &[f64]) -> f64 {
     let sum = data.iter().sum::<f64>();
     let count = data.len();
     match count {
-        positive if positive > 0 => Some(sum / count as f64),
-        _ => None,
+        positive if positive > 0 => sum / count as f64,
+        _ => 0.0,
     }
 }
 
-fn std_deviation(data: &[f64]) -> Option<f64> {
+fn std_deviation(data: &[f64]) -> f64 {
     match (mean(data), data.len()) {
-        (Some(data_mean), count) if count > 0 => {
+        (data_mean, count) if count > 0 => {
             let variance = data
                 .iter()
                 .map(|value| {
@@ -120,9 +120,9 @@ fn std_deviation(data: &[f64]) -> Option<f64> {
                 })
                 .sum::<f64>()
                 / count as f64;
-            Some(variance.sqrt())
+            variance.sqrt()
         }
-        _ => None,
+        _ => 0.0,
     }
 }
 
